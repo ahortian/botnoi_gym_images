@@ -56,6 +56,18 @@ def upload_file():
     </form>
     '''
 
+# สร้าง Request สำหรับ model รับ url
+@application.route('/url') 
+def predict_img_from_url():
+    #default_url = 'https://i.pinimg.com/originals/82/13/94/82139469411aefc48c7c42375ff56c9e.jpg'
+    this_url = request.args.get('img_url', default='please provide url', type=str)
+    try:
+        label = predictImageFromURL(this_url)
+    except:
+        label = 'URL not valid. Please try other URLs.'
+    return jsonify({'label': label})
+
+
 if __name__ == '__main__':
     # application.debug = False
     # application.run(host='0.0.0.0', port=8080)
