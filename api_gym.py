@@ -60,7 +60,7 @@ def upload_file():
 @application.route('/url') 
 def predict_img_from_url():
     #default_url = 'https://i.pinimg.com/originals/82/13/94/82139469411aefc48c7c42375ff56c9e.jpg'
-    this_url = request.args.get('img_url', default='please provide url', type=str)
+    this_url = request.args.get('p_image_url', default='please provide url', type=str)
     try:
         label = predictImageFromURL(this_url)
     except:
