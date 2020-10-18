@@ -16,10 +16,14 @@ from keras.preprocessing import image
 # Create pipeline
 def predictImage(pic_name):
     # Labels
-    dataset_labels = ['Lateral Pull Down',
-       'Roman Chair Bench', 
-       'Squat Rack',
-       'Stationary Bicycle']
+    dataset_labels = [
+        'Elliptical',
+        'Lateral Pull Down',
+        'Roman Chair Bench',
+        'Squat Rack',
+        'Stationary Bicycle',
+        'Treadmill'
+        ]
 
     #Load model
     modFile = 'mygym_model.h5'
@@ -33,7 +37,7 @@ def predictImage(pic_name):
     y_prob = mod.predict(img_tensor)
     y_classes = y_prob.argmax(axis=-1)
     res = dataset_labels[y_classes[0]]
-    return res
+    return res, y_prob
 
 
 def loadImage(URL):
@@ -45,8 +49,8 @@ def loadImage(URL):
   
 def predictImageFromURL(img_url):
     img_path = loadImage(img_url)
-    res = predictImage(img_path)
-    return res
+    res, y_prob = predictImage(img_path)
+    return res, y_prob
 
 ##--------------------------------##
 ##----------- Test ---------------##

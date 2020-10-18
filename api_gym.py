@@ -6,6 +6,9 @@ import os
 UPLOAD_FOLDER = './uploads'
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg'}
 
+# prob threshold required for making a prediction
+prob_threshold = 0.3
+
 do_debug = "apicharthortiangtham" in os.getcwd()
 
 # create Flask object
@@ -44,7 +47,9 @@ def upload_file():
             file.save(os.path.join(application.config['UPLOAD_FOLDER'],    
                              'image.png'))
             # นำรูปไปใส่ใน Model 
-            label = predictImage('./uploads/image.png')
+            label, y_prob = predictImage('./uploads/image.png')
+            if len(y_prob[y_prob > prob_threshold]) >= 2 or len(y_prob[y_prob > prob_threshold]) <= 0:
+                label = 'ไม่สามารถระบุชนิดได้ โปรดอัพโหลดภาพมุมอื่น'
             return jsonify({'label': label})
     return '''
     <!doctype html>
@@ -62,7 +67,11 @@ def predict_img_from_url():
     #default_url = 'https://i.pinimg.com/originals/82/13/94/82139469411aefc48c7c42375ff56c9e.jpg'
     this_url = request.args.get('p_image_url', default='please provide url', type=str)
     try:
-        label = predictImageFromURL(this_url)
+        label, y_prob = predictImageFromURL(this_url)
+        print(y_prob)
+        print(label)
+        if len(y_prob[y_prob > prob_threshold]) >= 2 or len(y_prob[y_prob > prob_threshold]) <= 0:
+            label = 'ไม่สามารถระบุชนิดได้ โปรดอัพโหลดภาพมุมอื่น'
     except:
         label = 'URL not valid. Please try other URLs.'
     return jsonify({'label': label})
